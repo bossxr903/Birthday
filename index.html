@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Surprise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Quicksand', sans-serif; }
+        body {
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; background: linear-gradient(135deg, #fdf1f4 0%, #f4e8f9 100%); overflow: hidden;
+        }
+        .mobile-container {
+            width: 360px; height: 700px; background: white; border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); position: relative; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; border: 8px solid #fff;
+        }
+        .screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 30px; text-align: center; opacity: 0; pointer-events: none;
+            transition: opacity 0.5s ease; background: linear-gradient(180deg, #ffffff 0%, #fff5f8 100%);
+        }
+        .screen.active { opacity: 1; pointer-events: auto; z-index: 10; }
+        
+        h2 { color: #5a5a5a; font-size: 22px; margin-bottom: 10px; z-index: 2; }
+        p { color: #888; font-size: 15px; margin-bottom: 20px; line-height: 1.5; z-index: 2;}
+        
+        .btn {
+            background-color: #fce4ec; color: #d81b60; border: none; padding: 12px 30px;
+            border-radius: 25px; font-size: 16px; font-weight: 700; cursor: pointer;
+            margin-top: 15px; transition: all 0.3s ease; z-index: 2;
+        }
+        .btn:hover { background-color: #f8bbd0; transform: translateY(-2px); }
+
+        /* Lottie Container Styles */
+        .lottie-container { width: 250px; height: 250px; margin-bottom: 20px; }
+        .lottie-small { width: 150px; height: 150px; }
+        .lottie-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.5; z-index: 0; pointer-events: none; }
+        
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-container">
+        
+        <div id="screen-1" class="screen active">
+            <div id="anim-text" class="lottie-container lottie-small"></div>
+            <h2>A Cutiepie was born today!</h2>
+            <p>Yes, it's YOU! A little surprise awaits...</p>
+            <button class="btn" onclick="goToScreen(2)">🎁 Start the surprise</button>
+        </div>
+
+        <div id="screen-2" class="screen">
+            <div id="anim-cake" class="lottie-container"></div>
+            <h2 id="cake-text">Let's celebrate!</h2>
+            <button class="btn" onclick="goToScreen(3)">Next ➔</button>
+        </div>
+
+        <div id="screen-3" class="screen">
+            <h2>Time to Party!</h2>
+            <div id="anim-balloons" class="lottie-container"></div>
+            <button class="btn" onclick="goToScreen(4)">Pop & Continue ➔</button>
+        </div>
+
+        <div id="screen-4" class="screen">
+            <div id="anim-paper" class="lottie-bg"></div>
+            <h2>Some Sweet Moments</h2>
+            <div style="width: 200px; height: 250px; background: #ffe4e1; border-radius: 10px; display:flex; align-items:center; justify-content:center; color:#d81b60; z-index: 2;">Your Photo Here</div>
+            <button class="btn" onclick="goToScreen(5)">✉️ Open My Message</button>
+        </div>
+
+        <div id="screen-5" class="screen">
+            <div id="anim-letter" class="lottie-container lottie-small"></div>
+            <h2 style="color:#d81b60;">Happy Birthday to you</h2>
+            <p style="text-align: left; background: #fff; padding: 15px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                I just want you to know how special you are. Keep being the amazing person you are, spreading joy wherever you go. 💖
+            </p>
+            <button class="btn" onclick="goToScreen(6)">One Last Thing ➔</button>
+        </div>
+
+        <div id="screen-6" class="screen">
+            <h2 id="gift-text">Tap the Gift...</h2>
+            <div id="anim-gift" class="lottie-container" style="cursor: pointer;" onclick="openGift()"></div>
+            <h2 id="final-msg" class="hidden" style="color:#d81b60; margin-top:10px;">Lots of love for you ❤️</h2>
+        </div>
+
+    </div>
+
+    <script>
+        // Function to load Lottie animations from your JSON files
+        function loadAnim(containerId, filename, loop = true) {
+            return lottie.loadAnimation({
+                container: document.getElementById(containerId),
+                renderer: 'svg',
+                loop: loop,
+                autoplay: true,
+                path: filename 
+            });
+        }
+
+        // Initialize all animations using your exact file names
+        document.addEventListener("DOMContentLoaded", function() {
+            loadAnim('anim-text', 'birthday text.json');
+            loadAnim('anim-cake', 'birthday cake.json');
+            loadAnim('anim-balloons', 'animated bellons.json');
+            loadAnim('anim-paper', 'decoration paper.json');
+            loadAnim('anim-letter', 'letter box (1).json');
+            
+            // Gift animation (loaded but we will handle the click)
+            loadAnim('anim-gift', 'gift box.json');
+        });
+
+        function goToScreen(num) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen-' + num).classList.add('active');
+            if(num === 3) triggerConfetti();
+        }
+
+        function openGift() {
+            document.getElementById('gift-text').classList.add('hidden');
+            document.getElementById('final-msg').classList.remove('hidden');
+            triggerConfetti();
+        }
+
+        function triggerConfetti() {
+            var duration = 2 * 1000;
+            var end = Date.now() + duration;
+            (function frame() {
+                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ffb6c1', '#b0e0e6', '#e6e6fa'] });
+                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ffb6c1', '#b0e0e6', '#e6e6fa'] });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+        }
+    </script>
+</body>
+</html>

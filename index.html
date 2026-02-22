@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cute birthday surprise · bubu edition</title>
+    <title>cute birthday surprise </title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     
     <!-- Lottie & confetti -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <!-- Tenor will be added later (one script) -->
     
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Quicksand', sans-serif; }
@@ -20,8 +19,8 @@
         }
         /* smaller & cuter container */
         .mobile-container {
-            width: 320px;                /* slightly reduced */
-            height: 600px;                /* more compact, cute proportion */
+            width: 320px;
+            height: 600px;
             background: white; 
             border-radius: 40px 40px 30px 30px;
             box-shadow: 0 20px 30px rgba(241, 134, 174, 0.15), 0 8px 15px rgba(0,0,0,0.05);
@@ -30,7 +29,7 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            border: 6px solid #fff9fb;    /* soft border */
+            border: 6px solid #fff9fb;
         }
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -103,7 +102,7 @@
 
         .hidden { display: none !important; }
 
-        /* extra cuteness: little sparkle */
+        /* sparkle animation */
         .sparkle {
             position: absolute;
             width: 8px; height: 8px;
@@ -112,6 +111,14 @@
             opacity: 0.5;
             filter: blur(1px);
             pointer-events: none;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); opacity: 0.4; }
+            50% { transform: translateY(-20px) scale(1.3); opacity: 0.8; }
+            100% { transform: translateY(0) scale(1); opacity: 0.4; }
+        }
+        .sparkle {
+            animation: float 3s infinite ease-in-out;
         }
     </style>
 </head>
@@ -122,7 +129,7 @@
         <!-- SCREEN 1 : bubu sticker instead of lottie text -->
         <div id="screen-1" class="screen active">
             <div class="sticker-box">
-                <!-- Tenor embed div (the script is at bottom, one for all) -->
+                <!-- Tenor embed div -->
                 <div class="tenor-gif-embed" data-postid="16115986830929782472" data-share-method="host" data-aspect-ratio="1" data-width="100%"></div>
             </div>
             <h2>a cutiepie was born today!</h2>
@@ -144,13 +151,13 @@
             <button class="btn" onclick="goToScreen(4)">pop & continue ➔</button>
         </div>
 
-        <!-- SCREEN 4 : photo area now an IMG tag (you can change src) -->
+        <!-- SCREEN 4 : photo area with img tag (you can change src) -->
         <div id="screen-4" class="screen">
             <div id="anim-paper" class="lottie-bg"></div>
             <h2>some sweet moments</h2>
             <div class="photo-frame">
-                <!-- just change this src attribute with any image link -->
-                <img id="profile-photo" src="https://via.placeholder.com/200x250/ffe4e1/db6d8c?text=Your+Photo" alt="your photo" style="width:100%; height:100%; object-fit:cover;">
+                <!-- change this src to any image link -->
+                <img id="profile-photo" src="https://i.ibb.co.com/k2vJ8bV/photo-2025-01-28-22-37-16.jpg" alt="your photo">
             </div>
             <button class="btn" onclick="goToScreen(5)">✉️ open my message</button>
         </div>
@@ -174,11 +181,16 @@
 
     </div>
 
-    <!-- Tenor script (placed once, outside screens) -->
+    <!-- Audio element (auto-play) -->
+    <audio id="birthday-song" loop>
+        <source src="birthday-102.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Tenor script -->
     <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
 
     <script>
-        // Lottie animations (all except the first one which is replaced by tenor)
+        // Lottie animations
         function loadAnim(containerId, filename, loop = true) {
             return lottie.loadAnimation({
                 container: document.getElementById(containerId),
@@ -189,10 +201,46 @@
             });
         }
 
+        // Auto-play music when page loads
+        window.addEventListener('load', function() {
+            const audio = document.getElementById('birthday-song');
+            
+            // সরাসরি play() কল
+            audio.play().then(() => {
+                console.log("🎵 Music started automatically!");
+            }).catch(error => {
+                console.log("Autoplay prevented by browser. Click anywhere to play.");
+                
+                // যদি autoplay ব্লক হয়, তাহলে প্রথম ক্লিকে চালাবে
+                document.body.addEventListener('click', function initAudio() {
+                    audio.play();
+                    document.body.removeEventListener('click', initAudio);
+                }, { once: true });
+                
+                // ইউজারকে জানান
+                const msg = document.createElement('div');
+                msg.style.position = 'fixed';
+                msg.style.bottom = '20px';
+                msg.style.left = '50%';
+                msg.style.transform = 'translateX(-50%)';
+                msg.style.background = '#ffd9e8';
+                msg.style.padding = '10px 20px';
+                msg.style.borderRadius = '50px';
+                msg.style.fontSize = '14px';
+                msg.style.color = '#b34e7a';
+                msg.style.zIndex = '9999';
+                msg.style.boxShadow = '0 4px 10px #faaac3';
+                msg.style.fontWeight = 'bold';
+                msg.innerText = '🎵 Tap anywhere for music';
+                document.body.appendChild(msg);
+                
+                setTimeout(() => msg.remove(), 3000);
+            });
+        });
+
         document.addEventListener("DOMContentLoaded", function() {
-            // "birthday text.json" is removed – we use tenor sticker instead.
             loadAnim('anim-cake', 'birthday cake.json');
-            loadAnim('anim-balloons', 'animated bellons.json');   // keep your original file name
+            loadAnim('anim-balloons', 'animated bellons.json');
             loadAnim('anim-paper', 'decoration paper.json');
             loadAnim('anim-letter', 'letter box (1).json');
             loadAnim('anim-gift', 'gift box.json');
@@ -201,13 +249,13 @@
         function goToScreen(num) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('screen-' + num).classList.add('active');
-            if (num === 3) triggerConfetti();   // confetti when entering party screen
+            if (num === 3) triggerConfetti();
         }
 
         function openGift() {
             document.getElementById('gift-text').classList.add('hidden');
             document.getElementById('final-msg').classList.remove('hidden');
-            triggerConfetti();  // extra confetti for gift opening
+            triggerConfetti();
         }
 
         function triggerConfetti() {
@@ -220,43 +268,16 @@
             }());
         }
 
-        // optional little sparkles floating (just for cuteness)
+        // Sparkles for cuteness
         function createSparkle() {
             const sparkle = document.createElement('div');
             sparkle.className = 'sparkle';
             sparkle.style.left = Math.random() * 100 + '%';
             sparkle.style.top = Math.random() * 100 + '%';
-            sparkle.style.animation = `float ${3 + Math.random() * 3}s infinite ease-in-out`;
             document.querySelector('.mobile-container').appendChild(sparkle);
             setTimeout(() => sparkle.remove(), 4000);
         }
         setInterval(createSparkle, 800);
     </script>
-    <!-- tiny sparkle animation -->
-    <style>
-        @keyframes float {
-            0% { transform: translateY(0) scale(1); opacity: 0.4; }
-            50% { transform: translateY(-20px) scale(1.3); opacity: 0.8; }
-            100% { transform: translateY(0) scale(1); opacity: 0.4; }
-        }
-        .sparkle {
-            position: absolute;
-            width: 8px; height: 8px;
-            background: #ffc1cc;
-            border-radius: 50%;
-            opacity: 0.4;
-            filter: blur(1.5px);
-            pointer-events: none;
-            z-index: 20;
-        }
-        /* make the gift a bit bouncy */
-        #anim-gift {
-            filter: drop-shadow(0 8px 12px #fbb0c4);
-            transition: transform 0.2s;
-        }
-        #anim-gift:hover {
-            transform: scale(1.02);
-        }
-    </style>
 </body>
 </html>

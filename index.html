@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Surprise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Quicksand', sans-serif; }
+        
+        body {
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; 
+            background: linear-gradient(135deg, #fdf1f4 0%, #f4e8f9 100%);
+            overflow: hidden;
+        }
+
+        .mobile-container {
+            width: 320px;
+            height: 600px;
+            background: white; border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); position: relative; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; border: 8px solid #fff;
+        }
+
+        /* গ্লোবাল ডেকোরেশন পেপার (১ম পেজ থেকে থাকবে) */
+        .global-decor {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            opacity: 0.6; z-index: 5; pointer-events: none;
+        }
+
+        .screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 25px; text-align: center; opacity: 0; pointer-events: none;
+            transition: opacity 0.5s ease; background: linear-gradient(180deg, #ffffff 0%, #fff5f8 100%);
+        }
+        
+        .screen.active { opacity: 1; pointer-events: auto; z-index: 10; }
+        
+        h2 { color: #5a5a5a; font-size: 20px; margin-bottom: 10px; z-index: 2; }
+        p { color: #888; font-size: 14px; margin-bottom: 20px; line-height: 1.5; z-index: 2;}
+        
+        .btn {
+            background-color: #fce4ec; color: #d81b60; border: none; padding: 10px 25px;
+            border-radius: 25px; font-size: 15px; font-weight: 700; cursor: pointer;
+            margin-top: 15px; transition: all 0.3s ease; z-index: 2;
+        }
+        .btn:hover { background-color: #f8bbd0; transform: translateY(-2px); }
+
+        .lottie-container { width: 200px; height: 200px; margin-bottom: 15px; }
+        .lottie-small { width: 140px; height: 140px; margin-bottom: 15px; }
+        
+        /* Tenor GIF Wrappers */
+        .gif-wrapper { width: 150px; margin-bottom: 15px; z-index: 2; }
+        .fire-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.4; z-index: 0; pointer-events: none; display: flex; align-items: center;}
+        
+        /* বেলুন ওড়ার অ্যানিমেশন */
+        .floating-balloons { position: absolute; bottom: -250px; width: 100%; display: flex; justify-content: center; z-index: 1;}
+        .float-anim { animation: floatUpAnim 4s linear forwards; }
+        @keyframes floatUpAnim {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-800px); }
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-container">
+        
+        <div id="global-paper" class="global-decor"></div>
+
+        <div id="screen-1" class="screen active">
+            <div class="gif-wrapper">
+                <div class="tenor-gif-embed" data-postid="16115986830929782472" data-share-method="host" data-aspect-ratio="1" data-width="100%"><a href="https://tenor.com/view/bubu-bubu-dudu-gif-16115986830929782472">Bubu Bubu Dudu Sticker</a></div>
+            </div>
+            <h2>A Cutiepie was born today!</h2>
+            <p>Yes, it's YOU! A little surprise awaits...</p>
+            <button class="btn" onclick="goToScreen(2)">🎁 Start</button>
+        </div>
+
+        <div id="screen-2" class="screen">
+            <div id="anim-cake" class="lottie-container"></div>
+            <h2 id="cake-text">Let's celebrate!</h2>
+            <button class="btn" onclick="goToScreen(3)">Next ➔</button>
+        </div>
+
+        <div id="screen-3" class="screen">
+            <h2>Time to Party!</h2>
+            <div id="balloon-wrapper" class="floating-balloons">
+                <div id="anim-balloons" class="lottie-container"></div>
+            </div>
+            <button class="btn" style="position:relative; z-index:10;" onclick="goToScreen(4)">Pop & Continue ➔</button>
+        </div>
+
+        <div id="screen-4" class="screen">
+            <div class="fire-bg">
+                <div class="tenor-gif-embed" data-postid="14818687" data-share-method="host" data-aspect-ratio="0.690625" data-width="100%"><a href="https://tenor.com/view/fire-flames-hot-burning-gif-14818687">Fire Flames GIF</a></div>
+            </div>
+            
+            <h2 style="color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">Sweet Moments</h2>
+            <div style="width: 180px; height: 220px; background: rgba(255,228,225, 0.9); border-radius: 10px; display:flex; align-items:center; justify-content:center; color:#d81b60; z-index: 2; border: 2px dashed #f8bbd0; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">Photo Space</div>
+            <button class="btn" onclick="goToScreen(5)">✉️ Open Message</button>
+        </div>
+
+        <div id="screen-5" class="screen">
+            <div id="anim-letter" class="lottie-container lottie-small"></div>
+            <h2 style="color:#d81b60;">Happy Birthday!</h2>
+            <p style="text-align: left; background: #fff; padding: 15px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                Just want you to know how special you are. Keep smiling and spreading joy wherever you go. 💖
+            </p>
+            <button class="btn" onclick="goToScreen(6)">One Last Thing ➔</button>
+        </div>
+
+        <div id="screen-6" class="screen">
+            <h2 id="gift-text">Tap the Gift...</h2>
+            <div id="anim-gift" class="lottie-container" style="cursor: pointer;" onclick="openGift()"></div>
+            <h2 id="final-msg" class="hidden" style="color:#d81b60; margin-top:10px;">Lots of love for you ❤️</h2>
+        </div>
+
+    </div>
+
+    <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+
+    <script>
+        // Lottie Animation Loader
+        function loadAnim(containerId, filename, loop = true) {
+            return lottie.loadAnimation({
+                container: document.getElementById(containerId),
+                renderer: 'svg',
+                loop: loop,
+                autoplay: true,
+                path: filename 
+            });
+        }
+
+        // JSON ফাইল লোড করা হচ্ছে (birthday text রিমুভ করা হয়েছে)
+        document.addEventListener("DOMContentLoaded", function() {
+            loadAnim('global-paper', 'decoration paper.json');
+            loadAnim('anim-cake', 'birthday cake.json');
+            loadAnim('anim-balloons', 'animated bellons.json');
+            loadAnim('anim-letter', 'letter box (1).json');
+            loadAnim('anim-gift', 'gift box.json');
+        });
+
+        // স্ক্রিন পরিবর্তন করার ফাংশন
+        function goToScreen(num) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen-' + num).classList.add('active');
+            
+            // ৩ নাম্বার স্ক্রিনে গেলে বেলুন ওড়ার অ্যানিমেশন ফায়ার হবে
+            if(num === 3) {
+                document.getElementById('balloon-wrapper').classList.add('float-anim');
+                triggerConfetti();
+            }
+
+            // ৪ নাম্বার স্ক্রিনে ডেকোরেশন পেপার হাইড হবে, অন্য স্ক্রিনে শো করবে
+            if(num === 4) {
+                document.getElementById('global-paper').style.display = 'none';
+            } else {
+                document.getElementById('global-paper').style.display = 'block';
+            }
+        }
+
+        // গিফট খোলার ফাংশন
+        function openGift() {
+            document.getElementById('gift-text').classList.add('hidden');
+            document.getElementById('final-msg').classList.remove('hidden');
+            triggerConfetti();
+        }
+
+        // কনফেটি (কাগজ ওড়ার) অ্যানিমেশন
+        function triggerConfetti() {
+            var duration = 2 * 1000;
+            var end = Date.now() + duration;
+            (function frame() {
+                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ffb6c1', '#b0e0e6', '#e6e6fa'] });
+                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ffb6c1', '#b0e0e6', '#e6e6fa'] });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+        }
+    </script>
+</body>
+</html>

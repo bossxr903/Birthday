@@ -3,133 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Surprise</title>
+    <title>cute birthday surprise · bubu edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     
+    <!-- Lottie & confetti -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Tenor will be added later (one script) -->
     
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Quicksand', sans-serif; }
-        
         body {
             display: flex; justify-content: center; align-items: center;
-            height: 100vh; 
-            background: linear-gradient(135deg, #fdf1f4 0%, #f4e8f9 100%);
-            overflow: hidden;
+            min-height: 100vh; background: linear-gradient(135deg, #ffe9f0 0%, #f9e1f5 100%);
+            margin: 0; padding: 10px;
         }
-
+        /* smaller & cuter container */
         .mobile-container {
-            width: 320px;
-            height: 600px;
-            background: white; border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1); position: relative; overflow: hidden;
-            display: flex; flex-direction: column; align-items: center; border: 8px solid #fff;
+            width: 320px;                /* slightly reduced */
+            height: 600px;                /* more compact, cute proportion */
+            background: white; 
+            border-radius: 40px 40px 30px 30px;
+            box-shadow: 0 20px 30px rgba(241, 134, 174, 0.15), 0 8px 15px rgba(0,0,0,0.05);
+            position: relative; 
+            overflow: hidden;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            border: 6px solid #fff9fb;    /* soft border */
         }
-
-        /* গ্লোবাল ডেকোরেশন পেপার (১ম পেজ থেকে থাকবে) */
-        .global-decor {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            opacity: 0.6; z-index: 5; pointer-events: none;
-        }
-
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            padding: 25px; text-align: center; opacity: 0; pointer-events: none;
-            transition: opacity 0.5s ease; background: linear-gradient(180deg, #ffffff 0%, #fff5f8 100%);
+            padding: 25px 20px; text-align: center; 
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.4s ease; 
+            background: linear-gradient(180deg, #ffffff 0%, #fff2f7 100%);
+            border-radius: inherit;
         }
-        
         .screen.active { opacity: 1; pointer-events: auto; z-index: 10; }
         
-        h2 { color: #5a5a5a; font-size: 20px; margin-bottom: 10px; z-index: 2; }
-        p { color: #888; font-size: 14px; margin-bottom: 20px; line-height: 1.5; z-index: 2;}
+        h2 { color: #5e4b5a; font-size: 22px; margin-bottom: 12px; z-index: 2; letter-spacing: -0.2px; }
+        p { color: #88707c; font-size: 14.5px; margin-bottom: 16px; line-height: 1.5; z-index: 2; }
         
         .btn {
-            background-color: #fce4ec; color: #d81b60; border: none; padding: 10px 25px;
-            border-radius: 25px; font-size: 15px; font-weight: 700; cursor: pointer;
-            margin-top: 15px; transition: all 0.3s ease; z-index: 2;
+            background-color: #ffe2ed; color: #b34e7a; border: none; padding: 10px 28px;
+            border-radius: 40px; font-size: 15px; font-weight: 700; cursor: pointer;
+            margin-top: 10px; transition: all 0.2s ease; z-index: 2; box-shadow: 0 4px 8px #fddae9;
+            border: 1px solid #ffd9e7;
         }
-        .btn:hover { background-color: #f8bbd0; transform: translateY(-2px); }
+        .btn:hover { background-color: #ffd3e2; transform: translateY(-2px); box-shadow: 0 8px 12px #fcc6db; }
 
-        .lottie-container { width: 200px; height: 200px; margin-bottom: 15px; }
-        .lottie-small { width: 140px; height: 140px; margin-bottom: 15px; }
+        /* Lottie containers */
+        .lottie-container { width: 220px; height: 220px; margin-bottom: 15px; }
+        .lottie-small { width: 140px; height: 140px; }
+        .lottie-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.4; z-index: 0; pointer-events: none; }
         
-        /* Tenor GIF Wrappers */
-        .gif-wrapper { width: 150px; margin-bottom: 15px; z-index: 2; }
-        .fire-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.4; z-index: 0; pointer-events: none; display: flex; align-items: center;}
+        /* special container for the tenor sticker (bubu) */
+        .sticker-box {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 15px auto;
+            border-radius: 30px;
+            overflow: hidden;
+            background: #ffeef4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 0 2px white, 0 8px 15px #fecfdf;
+        }
+        .sticker-box .tenor-gif-embed {
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
         
-        /* বেলুন ওড়ার অ্যানিমেশন */
-        .floating-balloons { position: absolute; bottom: -250px; width: 100%; display: flex; justify-content: center; z-index: 1;}
-        .float-anim { animation: floatUpAnim 4s linear forwards; }
-        @keyframes floatUpAnim {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-800px); }
+        /* photo area now image */
+        .photo-frame {
+            width: 200px; 
+            height: 250px; 
+            border-radius: 25px; 
+            background: #ffe4e9; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: #b34e7a; 
+            z-index: 2;
+            margin: 5px 0 10px;
+            box-shadow: 0 10px 15px #fbc9db;
+            overflow: hidden;
+            border: 3px solid white;
+        }
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
         .hidden { display: none !important; }
+
+        /* extra cuteness: little sparkle */
+        .sparkle {
+            position: absolute;
+            width: 8px; height: 8px;
+            background: #ffb5c0;
+            border-radius: 50%;
+            opacity: 0.5;
+            filter: blur(1px);
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
 
     <div class="mobile-container">
-        
-        <div id="global-paper" class="global-decor"></div>
 
+        <!-- SCREEN 1 : bubu sticker instead of lottie text -->
         <div id="screen-1" class="screen active">
-            <div class="gif-wrapper">
-                <div class="tenor-gif-embed" data-postid="16115986830929782472" data-share-method="host" data-aspect-ratio="1" data-width="100%"><a href="https://tenor.com/view/bubu-bubu-dudu-gif-16115986830929782472">Bubu Bubu Dudu Sticker</a></div>
+            <div class="sticker-box">
+                <!-- Tenor embed div (the script is at bottom, one for all) -->
+                <div class="tenor-gif-embed" data-postid="16115986830929782472" data-share-method="host" data-aspect-ratio="1" data-width="100%"></div>
             </div>
-            <h2>A Cutiepie was born today!</h2>
-            <p>Yes, it's YOU! A little surprise awaits...</p>
-            <button class="btn" onclick="goToScreen(2)">🎁 Start</button>
+            <h2>a cutiepie was born today!</h2>
+            <p>yes, it's YOU! a little bubu surprise awaits...</p>
+            <button class="btn" onclick="goToScreen(2)">🎁 start the surprise</button>
         </div>
 
+        <!-- SCREEN 2 : cake lottie -->
         <div id="screen-2" class="screen">
             <div id="anim-cake" class="lottie-container"></div>
-            <h2 id="cake-text">Let's celebrate!</h2>
-            <button class="btn" onclick="goToScreen(3)">Next ➔</button>
+            <h2 id="cake-text">let's celebrate!</h2>
+            <button class="btn" onclick="goToScreen(3)">next ➔</button>
         </div>
 
+        <!-- SCREEN 3 : balloons + confetti -->
         <div id="screen-3" class="screen">
-            <h2>Time to Party!</h2>
-            <div id="balloon-wrapper" class="floating-balloons">
-                <div id="anim-balloons" class="lottie-container"></div>
-            </div>
-            <button class="btn" style="position:relative; z-index:10;" onclick="goToScreen(4)">Pop & Continue ➔</button>
+            <h2>time to party!</h2>
+            <div id="anim-balloons" class="lottie-container"></div>
+            <button class="btn" onclick="goToScreen(4)">pop & continue ➔</button>
         </div>
 
+        <!-- SCREEN 4 : photo area now an IMG tag (you can change src) -->
         <div id="screen-4" class="screen">
-            <div class="fire-bg">
-                <div class="tenor-gif-embed" data-postid="14818687" data-share-method="host" data-aspect-ratio="0.690625" data-width="100%"><a href="https://tenor.com/view/fire-flames-hot-burning-gif-14818687">Fire Flames GIF</a></div>
+            <div id="anim-paper" class="lottie-bg"></div>
+            <h2>some sweet moments</h2>
+            <div class="photo-frame">
+                <!-- just change this src attribute with any image link -->
+                <img id="profile-photo" src="https://via.placeholder.com/200x250/ffe4e1/db6d8c?text=Your+Photo" alt="your photo" style="width:100%; height:100%; object-fit:cover;">
             </div>
-            
-            <h2 style="color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">Sweet Moments</h2>
-            <div style="width: 180px; height: 220px; background: rgba(255,228,225, 0.9); border-radius: 10px; display:flex; align-items:center; justify-content:center; color:#d81b60; z-index: 2; border: 2px dashed #f8bbd0; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">Photo Space</div>
-            <button class="btn" onclick="goToScreen(5)">✉️ Open Message</button>
+            <button class="btn" onclick="goToScreen(5)">✉️ open my message</button>
         </div>
 
+        <!-- SCREEN 5 : letter -->
         <div id="screen-5" class="screen">
             <div id="anim-letter" class="lottie-container lottie-small"></div>
-            <h2 style="color:#d81b60;">Happy Birthday!</h2>
-            <p style="text-align: left; background: #fff; padding: 15px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-                Just want you to know how special you are. Keep smiling and spreading joy wherever you go. 💖
+            <h2 style="color:#ce5886;">happy birthday to you</h2>
+            <p style="text-align: left; background: #fff5f9; padding: 15px; border-radius: 25px; box-shadow: 0 5px 15px #fad4e2; font-size: 14px;">
+                i just want you to know how special you are. keep being the amazing person you are, spreading joy wherever you go. 💖
             </p>
-            <button class="btn" onclick="goToScreen(6)">One Last Thing ➔</button>
+            <button class="btn" onclick="goToScreen(6)">one last thing ➔</button>
         </div>
 
+        <!-- SCREEN 6 : gift box + final message -->
         <div id="screen-6" class="screen">
-            <h2 id="gift-text">Tap the Gift...</h2>
+            <h2 id="gift-text">tap the gift...</h2>
             <div id="anim-gift" class="lottie-container" style="cursor: pointer;" onclick="openGift()"></div>
-            <h2 id="final-msg" class="hidden" style="color:#d81b60; margin-top:10px;">Lots of love for you ❤️</h2>
+            <h2 id="final-msg" class="hidden" style="color:#ce5886; margin-top:10px;">lots of love for you ❤️</h2>
         </div>
 
     </div>
 
+    <!-- Tenor script (placed once, outside screens) -->
     <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
 
     <script>
-        // Lottie Animation Loader
+        // Lottie animations (all except the first one which is replaced by tenor)
         function loadAnim(containerId, filename, loop = true) {
             return lottie.loadAnimation({
                 container: document.getElementById(containerId),
@@ -140,51 +189,74 @@
             });
         }
 
-        // JSON ফাইল লোড করা হচ্ছে (birthday text রিমুভ করা হয়েছে)
         document.addEventListener("DOMContentLoaded", function() {
-            loadAnim('global-paper', 'decoration paper.json');
+            // "birthday text.json" is removed – we use tenor sticker instead.
             loadAnim('anim-cake', 'birthday cake.json');
-            loadAnim('anim-balloons', 'animated bellons.json');
+            loadAnim('anim-balloons', 'animated bellons.json');   // keep your original file name
+            loadAnim('anim-paper', 'decoration paper.json');
             loadAnim('anim-letter', 'letter box (1).json');
             loadAnim('anim-gift', 'gift box.json');
         });
 
-        // স্ক্রিন পরিবর্তন করার ফাংশন
         function goToScreen(num) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('screen-' + num).classList.add('active');
-            
-            // ৩ নাম্বার স্ক্রিনে গেলে বেলুন ওড়ার অ্যানিমেশন ফায়ার হবে
-            if(num === 3) {
-                document.getElementById('balloon-wrapper').classList.add('float-anim');
-                triggerConfetti();
-            }
-
-            // ৪ নাম্বার স্ক্রিনে ডেকোরেশন পেপার হাইড হবে, অন্য স্ক্রিনে শো করবে
-            if(num === 4) {
-                document.getElementById('global-paper').style.display = 'none';
-            } else {
-                document.getElementById('global-paper').style.display = 'block';
-            }
+            if (num === 3) triggerConfetti();   // confetti when entering party screen
         }
 
-        // গিফট খোলার ফাংশন
         function openGift() {
             document.getElementById('gift-text').classList.add('hidden');
             document.getElementById('final-msg').classList.remove('hidden');
-            triggerConfetti();
+            triggerConfetti();  // extra confetti for gift opening
         }
 
-        // কনফেটি (কাগজ ওড়ার) অ্যানিমেশন
         function triggerConfetti() {
-            var duration = 2 * 1000;
+            var duration = 1.8 * 1000;
             var end = Date.now() + duration;
             (function frame() {
-                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ffb6c1', '#b0e0e6', '#e6e6fa'] });
-                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ffb6c1', '#b0e0e6', '#e6e6fa'] });
+                confetti({ particleCount: 4, angle: 60, spread: 45, origin: { x: 0 }, colors: ['#ffb6c1', '#b0e0e6', '#e6e6fa', '#fbc0cb'] });
+                confetti({ particleCount: 4, angle: 120, spread: 45, origin: { x: 1 }, colors: ['#ffb6c1', '#b0e0e6', '#e6e6fa', '#f9c7d3'] });
                 if (Date.now() < end) requestAnimationFrame(frame);
             }());
         }
+
+        // optional little sparkles floating (just for cuteness)
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.top = Math.random() * 100 + '%';
+            sparkle.style.animation = `float ${3 + Math.random() * 3}s infinite ease-in-out`;
+            document.querySelector('.mobile-container').appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 4000);
+        }
+        setInterval(createSparkle, 800);
     </script>
+    <!-- tiny sparkle animation -->
+    <style>
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); opacity: 0.4; }
+            50% { transform: translateY(-20px) scale(1.3); opacity: 0.8; }
+            100% { transform: translateY(0) scale(1); opacity: 0.4; }
+        }
+        .sparkle {
+            position: absolute;
+            width: 8px; height: 8px;
+            background: #ffc1cc;
+            border-radius: 50%;
+            opacity: 0.4;
+            filter: blur(1.5px);
+            pointer-events: none;
+            z-index: 20;
+        }
+        /* make the gift a bit bouncy */
+        #anim-gift {
+            filter: drop-shadow(0 8px 12px #fbb0c4);
+            transition: transform 0.2s;
+        }
+        #anim-gift:hover {
+            transform: scale(1.02);
+        }
+    </style>
 </body>
 </html>
